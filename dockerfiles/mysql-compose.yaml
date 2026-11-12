@@ -1,0 +1,23 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root123       # contraseña del usuario root
+      MYSQL_DATABASE: ad01               # base de datos que se crea al arrancar
+      MYSQL_USER: rsgp                   # usuario de trabajo
+      MYSQL_PASSWORD: ad01
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql       # los datos persisten entre reinicios
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot123"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    restart: unless-stopped
+
+volumes:
+  mysql-data:

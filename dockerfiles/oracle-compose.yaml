@@ -1,0 +1,23 @@
+services:
+  oracle:
+    image: gvenzl/oracle-free:slim
+    container_name: oracle-free
+    environment:
+      ORACLE_PASSWORD: Oracle123        # contraseña de SYS y SYSTEM
+      APP_USER: rsgp                    # usuario de trabajo que se crea al arrancar
+      APP_USER_PASSWORD: AD01
+    ports:
+      - "1521:1521"
+    volumes:
+      - oracle-data:/opt/oracle/oradata # los datos persisten entre reinicios
+    shm_size: 1gb                       # Oracle lo necesita o puede fallar
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+    restart: unless-stopped
+
+volumes:
+  oracle-data:
